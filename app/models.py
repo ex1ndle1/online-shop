@@ -17,6 +17,7 @@ class Category(BaseModel):
     class Meta:
         verbose_name_plural = 'Categories'
 
+
 class Product(BaseModel):
     name = models.CharField(max_length=220)
     description = models.TextField(null=True, blank=True)
@@ -25,12 +26,12 @@ class Product(BaseModel):
     image = models.ImageField(upload_to='product/', null=True, blank=True)
     stock = models.PositiveSmallIntegerField(default=1)
     category = models.ForeignKey(
-        'app.Category',
-        on_delete=models.SET_NULL,
-        related_name='products',
-        null=True,
-        blank=True
-    )
+         'app.Category',
+         on_delete=models.SET_NULL,
+         related_name='products',
+         null=True,
+         blank=True
+     )
 
 
     @property

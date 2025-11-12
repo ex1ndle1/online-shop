@@ -1,4 +1,4 @@
-from .models import Product
+from .models import Product, Category
 from django import forms
 
 class ProductForm(forms.ModelForm):
@@ -8,3 +8,8 @@ class ProductForm(forms.ModelForm):
 
 
         
+
+class CategoryForm(forms.ModelForm):
+     class Meta:
+         model = Category
+         fields = ['title']

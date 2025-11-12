@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 
 from .models import Category,Product
-from .forms import ProductForm
+from .forms import ProductForm,CategoryForm
 
 # Create your views here.
 def index(request):
@@ -32,7 +32,7 @@ def create_product(request):
         
     else:
         form = ProductForm()
-    return render(request, 'app/create_product.html', {'form': form, 'title': 'Add Product','categories':category})
+    return render(request, 'app/create_product.html', {'form': form, 'categories':category})
 
 
 def delete_product(request):
@@ -45,3 +45,38 @@ def delete_product(request):
         return redirect('app:index')
     
     return render(request, 'app/delete_product.html')
+
+
+
+def product_update(request):
+    product = None
+    form = None
+
+    if request.method == 'POST':
+ 
+        if 'load' in request.POST:
+            product_id = request.POST.get('product_id')
+            product = get_object_or_404(Product, id=product_id)
+            form = ProductForm(instance=product)
+
+        elif 'save' in request.POST:
+            product_id = request.POST.get('product_id')
+            product = get_object_or_404(Product, id=product_id)
+            form = ProductForm(request.POST, request.FILES, instance=product) #yangi productni yaratishni orniga, uni edit qilish uchun instanveni ishlatdim
+            if form.is_valid():
+                form.save()
+                return redirect('app:product_update')
+
+    return render(request, 'app/product_update.html', {'product': product, 'form': form})
+
+def create_category(request):
+    if request.method == 'POST':
+          form = CategoryForm(request.POST)
+          if form.is_valid():
+              form.save()
+              return redirect('app:index')
+    
+    else:
+        form = CategoryForm()
+
+    return render(request, 'app/create_category.html', {'form': form})

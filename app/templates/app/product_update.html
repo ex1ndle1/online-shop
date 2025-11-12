@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Update Product by ID</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Product ID:</label>
+    {% if product %}
+        <input type="number" name="product_id" value="{{ product.id }}">
+    {% else %}
+        <input type="number" name="product_id">
+    {% endif %}
+    <button type="submit" name="load">Load</button>
+
+    {% if product and form %}
+        <hr>
+        <h3>Current Values</h3>
+        <p>Name: {{ product.name }}</p>
+        <p>Price: {{ product.price }}</p>
+        <p>Category: {{ product.category }}</p>
+        <p>Description: {{ product.description }}</p>
+        {% if product.image %}
+            <p>Image: <img src="{{ product.image.url }}" width="100"></p>
+        {% endif %}
+
+        <hr>
+        <h3>New Values</h3>
+        {{ form.as_p }}
+        <button type="submit" name="save">Save</button>
+    {% endif %}
+</form>
+
+</body>
+</html>

@@ -6,15 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>Update Product by ID</h2>
+  
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label>Product ID:</label>
-    {% if product %}
-        <input type="number" name="product_id" value="{{ product.id }}">
+    {% if product %}<input type="number" name="product_id" value="{{ product.id }}">
     {% else %}
-        <input type="number" name="product_id">
+    <input type="number" name="product_id">
     {% endif %}
     <button type="submit" name="load">Load</button>
 
@@ -28,9 +27,8 @@
         {% if product.image %}
             <p>Image: <img src="{{ product.image.url }}" width="100"></p>
         {% endif %}
-
         <hr>
-        <h3>New Values</h3>
+      
         {{ form.as_p }}
         <button type="submit" name="save">Save</button>
     {% endif %}

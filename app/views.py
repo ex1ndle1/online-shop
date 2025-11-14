@@ -1,10 +1,34 @@
 from django.shortcuts import render,get_object_or_404,redirect
 
-from .models import Category,Product
-from .forms import ProductForm,CategoryForm
+from .models import Category,Product,Comment
+
+from .forms import ProductForm,CategoryForm,CommentForm
 
 # Create your views here.
 def index(request):
+    # search_query = request.GET.get('q','')
+    # filter_type = request.GET.get('filter_type','')
+    
+    # categories = Category.objects.all()
+    
+    # if category_id:
+    #     products = Product.objects.filter(category = category_id)
+    # else:
+    #     products = Product.objects.all()
+        
+    # if search_query:
+    #     products = products.filter(Q(name__icontains = search_query) | Q(description__icontains=search_query))
+
+        
+    # if filter_type == 'expensive':
+    #     products = products.order_by('-price')
+        
+    # elif filter_type == 'cheap':
+    #     products = products.order_by('price')
+        
+    # else:
+    #     products = Product.objects.all()
+    
     category = Category.objects.all()
     product = Product.objects.all()
     context = {
@@ -16,9 +40,19 @@ def index(request):
 
 
 def detail(request, product_id):
-    product = get_object_or_404(Product, id = product_id)
-    return render(request, 'app/detail.html', {'product':product})
+    product = get_object_or_404(Product, id=product_id)
 
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.product = product
+            comment.save()
+            return redirect('app:detail', product_id=product.id)
+    else:
+        form = CommentForm()
+    comments = product.comments.all()
+    return render(request, 'app/detail.html', {'product': product,'comments': comments,'form': form})
 
 
 def create_product(request):
@@ -35,6 +69,7 @@ def create_product(request):
     return render(request, 'app/create_product.html', {'form': form, 'categories':category})
 
 
+
 def delete_product(request):
 
     if request.method == 'POST':
@@ -46,6 +81,8 @@ def delete_product(request):
     
     return render(request, 'app/delete_product.html')
 
+
+# def create_product(request)
 
 
 def product_update(request):
@@ -65,9 +102,11 @@ def product_update(request):
             form = ProductForm(request.POST, request.FILES, instance=product) #yangi productni yaratishni orniga, uni edit qilish uchun instanveni ishlatdim
             if form.is_valid():
                 form.save()
-                return redirect('app:product_update')
+                return redirect('app:index')
 
     return render(request, 'app/product_update.html', {'product': product, 'form': form})
+
+
 
 def create_category(request):
     if request.method == 'POST':
@@ -80,3 +119,10 @@ def create_category(request):
         form = CategoryForm()
 
     return render(request, 'app/create_category.html', {'form': form})
+
+
+
+
+def info(request):
+    product =  Product.objects.all()
+    return render(request, 'app/info.html' , {'products':product})

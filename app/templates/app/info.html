@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Table Example</title>
+</head>
+<body>
+
+    <h2>Product List</h2>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price ($)</th>
+            <th>Discount</th>
+            <th>Image</th>
+        </tr>
+
+
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{product.discount}}</td>
+            <td> <img src="{{ product.image.url }}" width="60"></td>
+        
+        </tr>
+        {% endfor %}
+    </table>
+
+<a href="{%url 'app:delete_product'%}">delete page</a>
+<br>
+<a href="{%url 'app:product_update'%}">update product</a>
+<br>
+<a href="{%url 'app:create_product'%}">create product</a>
+
+
+</body>
+</html>

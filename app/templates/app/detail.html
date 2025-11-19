@@ -14,8 +14,18 @@
         <!-- Core theme CSS -->
         <link href="{% static 'app/css/styles.css' %}" rel="stylesheet" />
     </head>
+    <div id="confirm" class="modal-bg">
+    <div class="modal-box">
+        <h4>Are you sure?</h4>
+        <p>You want to make an order?</p>
+
+        <button form="order-form" type="submit" class="modal-btn modal-confirm">Yes</button>
+        <a href="#" class="modal-btn modal-cancel">No</a>
+    </div>
+</div>
     <body>
 
+</div>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
@@ -70,25 +80,30 @@
                         </div>
 
                         <p class="lead">{{ product.description }}</p>
-
+                        
                         <div class="d-flex">
-                            <form>
+                            <form  id="order-form" method="POST">
+                                
+                                {%csrf_token%}
+                                <div id="confirm" class="modal-bg">
+   
                                 <div class="form-group">
                                     <h2>Place an order</h2>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label>Your name</label>
-                                    <input type="text" class="form-control" placeholder="Your name">
+                                    <input type="text" class="form-control" placeholder="Your name" name="name">
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label>Your phone</label>
-                                    <input type="text" class="form-control" placeholder="Your phone">
+                                    <input type="text" class="form-control" placeholder="Your phone" name="phone">
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <input type="text" class="btn btn-success" value="Send">
+                           
+                                   <a href="#confirm" class="btn btn-primary">Send</a>
                                 </div>
                             </form>
                         </div>

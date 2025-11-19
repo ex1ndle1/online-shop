@@ -55,3 +55,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+class Order(models.Model):
+    name = models.CharField(max_length=230)
+    created_at = models.DateTimeField(auto_now_add=True)
+    phone=models.CharField(max_length=16)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.name
+    

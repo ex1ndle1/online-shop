@@ -1,8 +1,8 @@
 from django.shortcuts import render,get_object_or_404,redirect
 
-from .models import Category,Product,Comment
+from .models import Category,Product
 
-from .forms import ProductForm,CategoryForm,CommentForm
+from .forms import ProductForm,CategoryForm,CommentForm,OrderForm
 
 # Create your views here.
 def index(request):
@@ -66,7 +66,7 @@ def create_product(request):
         
     else:
         form = ProductForm()
-    return render(request, 'app/create_product.html', {'form': form, 'categories':category})
+    return render(request, 'app/crud/create_product.html', {'form': form, 'categories':category})
 
 
 
@@ -79,7 +79,7 @@ def delete_product(request):
         product.delete()
         return redirect('app:index')
     
-    return render(request, 'app/delete_product.html')
+    return render(request, 'app/crud/delete_product.html')
 
 
 # def create_product(request)
@@ -118,7 +118,7 @@ def create_category(request):
     else:
         form = CategoryForm()
 
-    return render(request, 'app/create_category.html', {'form': form})
+    return render(request, 'app/crud/create_category.html', {'form': form})
 
 
 
@@ -126,3 +126,5 @@ def create_category(request):
 def info(request):
     product =  Product.objects.all()
     return render(request, 'app/info.html' , {'products':product})
+
+

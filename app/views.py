@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404,redirect
 
 from .models import Category,Product
 
-from .forms import ProductForm,CategoryForm,CommentForm,OrderForm
+from .forms import ProductForm,CategoryForm,CommentForm,OrderForm, AboutForm
 
 # Create your views here.
 def index(request):
@@ -43,16 +43,27 @@ def detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
+        if 'comment_form' in request.POST:
+         form = CommentForm(request.POST, request.FILES)
+         if form.is_valid():
             comment = form.save(commit=False)
             comment.product = product
             comment.save()
+            product.rating_upd()
             return redirect('app:detail', product_id=product.id)
+
+
+     
+        else:
+         form = CommentForm()
+
     else:
         form = CommentForm()
     comments = product.comments.all()
     return render(request, 'app/detail.html', {'product': product,'comments': comments,'form': form})
+
+
+
 
 
 def create_product(request):
@@ -122,9 +133,21 @@ def create_category(request):
 
 
 
-
 def info(request):
     product =  Product.objects.all()
     return render(request, 'app/info.html' , {'products':product})
 
 
+
+
+def about(request):
+    if request.method == 'POST':
+        form = AboutForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('app:index')
+        
+
+    else:
+        form = AboutForm()
+    return render(request, 'app/about.html', {'form':form})

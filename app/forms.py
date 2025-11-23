@@ -1,4 +1,4 @@
-from .models import Product, Category, Comment, Order
+from .models import Product, Category, Comment, Order, Messages
 from django import forms
 
 class ProductForm(forms.ModelForm):
@@ -19,10 +19,17 @@ class CategoryForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['name', 'email', 'text']
-
+        fields = ['rating', 'name', 'email', 'message', 'file']
 
 class OrderForm(forms.ModelForm):
     class Meta:
         model  = Order
         fields = ['name', 'phone'] 
+
+
+
+
+class AboutForm(forms.ModelForm):
+    class Meta:
+        model = Messages
+        fields = ['author', 'title' , 'email']

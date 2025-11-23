@@ -1,5 +1,10 @@
 from django.db import models
 from decimal import Decimal
+from django.db.models import Avg
+
+
+
+
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -19,6 +24,7 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
+    rating = models.FloatField(default=0)
     name = models.CharField(max_length=220)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=14, decimal_places=2)      
@@ -32,7 +38,11 @@ class Product(BaseModel):
          null=True,
          blank=True
      )
-
+    
+    def rating_upd(self):
+        avg = self.comments.aggregate(Avg("rating"))["rating__avg"] or 0
+        self.rating = round(avg, 1)
+        self.save(update_fields=["rating"])
 
     @property
     def discounted_price(self):
@@ -41,21 +51,41 @@ class Product(BaseModel):
             return self.price * Decimal(f'{(1-self.discount/100)}')
         return self.price
 
+    
+ 
     def __str__(self):
         return self.name
 
 
 
-class Comment(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    
+class Comment(BaseModel):
+    class RatingChoices(models.IntegerChoices):
+        ONE = 1, "⭐ 1"
+        TWO = 2, "⭐⭐ 2"
+        THREE = 3, "⭐⭐⭐ 3"
+        FOUR = 4, "⭐⭐⭐⭐ 4"
+        FIVE = 5, "⭐⭐⭐⭐⭐ 5"
+    
     name = models.CharField(max_length=255)
     email = models.EmailField()
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    message = models.TextField()
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='comments')
+    file = models.ImageField(upload_to='comments/%Y/%m/%d/',null=True,blank=True)
+    rating = models.PositiveSmallIntegerField(choices=RatingChoices.choices,default = RatingChoices.FIVE)
+    is_handle = models.BooleanField(default=False)
+    
+    
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.message}'
     
+
+
+class Messages(BaseModel):
+    title =  models.CharField(max_length=250)
+    author = models.CharField(max_length=250)
+    email = models.EmailField()
 
 
 class Order(models.Model):

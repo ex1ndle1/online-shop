@@ -10,15 +10,26 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        exclude = ()
+        fields = ("username", "email", "phone")
 
-    def clean(self):  #added clean method for comparing two passwords 
+    def clean(self):
         cleaned_data = super().clean()
 
-        password = cleaned_data.get('password')
-        password_confirm = cleaned_data.get('password_confirm')
-
-        if password != password_confirm:
-            raise forms.ValidationError('passwords are diffrent')
-        
+        if cleaned_data.get("password") != cleaned_data.get("password_confirm"):
+            raise forms.ValidationError("Passwords do not match")
         return cleaned_data
+
+        
+        
+    def save(self, commit=True):
+       user = super().save(commit=False)
+       user.set_password(self.cleaned_data["password"])  # hash password
+
+       if commit:
+        user.save()
+       return user
+    
+
+class LoginForm(forms.Form):
+     username = forms.CharField(label="enter username")
+     password = forms.CharField(widget=forms.PasswordInput)

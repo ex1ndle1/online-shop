@@ -21,8 +21,11 @@ def register(request):
     return render(request, 'user/register.html', {"form": form})
 
 
+def login_choice(request):
+    return render(request, 'user/login_choice.html')
 
-def login(request):
+
+def login_by_username(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -33,11 +36,48 @@ def login(request):
                 login(request, user) 
                 return redirect('app:index')
             else:
-                return render(request, 'login.html', {'form': form, 'error': 'Неверный логин или пароль'})
+                return render(request, 'user/login_by_username.html', {'form': form, 'error': 'Login is incorrect'})
     else:
         form = LoginForm()
 
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'user/login_by_username.html', {'form': form})
+
+
+
+def login_by_phone(request):
+     if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            phone = form.cleaned_data['phone']
+            password = form.cleaned_data['password']
+            user = authenticate(request, phone=phone, password=password)
+            if user is not None:
+                login(request, user) 
+                return redirect('app:index')
+            else:
+                return render(request, 'user/login_by_phone.html', {'form': form, 'error': 'Login is incorrect'})
+     else:
+        form = LoginForm()
+
+     return render(request, 'user/login_by_phone.html', {'form': form})
+
+
+def login_by_email(request):
+     if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user) 
+                return redirect('app:index')
+            else:
+                return render(request, 'user/login_by_email.html', {'form': form, 'error': 'Login is incorrect'})
+     else:
+        form = LoginForm()
+
+     return render(request, 'user/login_by_email.html', {'form': form})
 
 
 

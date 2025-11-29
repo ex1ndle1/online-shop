@@ -35,8 +35,7 @@ def login_by_username(request):
                 login(request, user)
                 return redirect('app:index')
             else:
-                return render(request, 'user/login_by_username.html', 
-                              {'form': form, 'error': 'Login is incorrect'})
+                return render(request, 'user/login_by_username.html', {'form': form, 'error': 'Login is incorrect'})
     else:
         form = LoginForm()
 
@@ -56,8 +55,7 @@ def login_by_phone(request):
                 login(request, user)
                 return redirect('app:index')
             else:
-                return render(request, 'user/login_by_phone.html', 
-                              {'form': form, 'error': 'Login is incorrect'})
+                return render(request, 'user/login_by_phone.html', {'form': form, 'error': 'Login is incorrect'})
     else:
         form = LoginForm()
 
@@ -77,8 +75,7 @@ def login_by_email(request):
                 login(request, user)
                 return redirect('app:index')
             else:
-                return render(request, 'user/login_by_email.html', 
-                              {'form': form, 'error': 'Login is incorrect'})
+                return render(request, 'user/login_by_email.html', {'form': form, 'error': 'Login is incorrect'})
     else:
         form = LoginForm()
 

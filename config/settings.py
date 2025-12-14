@@ -106,6 +106,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.middleware.custom.CustomMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -190,3 +191,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 AUTH_USER_MODEL = "user.User"
+
+
+
+USE_I18N = True
+
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('ru', 'Russian')
+]
+
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
